@@ -149,8 +149,11 @@ BTCChina.prototype.cancelOrder = function(id, callback) {
   this._tradeRequest('cancelOrder', [id], callback);
 }
 
-BTCChina.prototype.getAccountInfo = function(callback) {
-  this._tradeRequest('getAccountInfo', [], callback);
+BTCChina.prototype.getAccountInfo = function(type, callback) {
+    if(type === null || type === undefined)
+        this._tradeRequest('getAccountInfo', [], callback);
+    else
+        this._tradeRequest('getAccountInfo', [type], callback);
 }
 
 BTCChina.prototype.getDeposits = function(currency, pendingonly, callback) {
