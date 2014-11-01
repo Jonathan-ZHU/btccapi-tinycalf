@@ -20,8 +20,10 @@ BTCChina.prototype._request = function(handler, options, data, callback) {
       buffer += data;
     });
     res.on('end', function() {
-      if(buffer === '401 Unauthorized\n')
-        return callback('General API error: 401 Unauthorized');
+    	
+      // check and return unauthorized messages
+      if(buffer.lastIndexOf('401 Unauthorized', 0) === 0)
+        return callback('General API error: '+buffer);
 
       try {
         var json = JSON.parse(buffer);
