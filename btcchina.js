@@ -65,24 +65,44 @@ BTCChina.prototype._marketRequest = function(method, params, callback) {
 // 
 // Market API calls
 // 
-BTCChina.prototype.ticker = function(callback) {
-  this._marketRequest('ticker', null, callback);
+BTCChina.prototype.ticker = function(market, callback) {
+  var params = {};
+
+  if(market)
+    params['market']=market;
+
+  this._marketRequest('ticker', params, callback);
 }
 
 BTCChina.prototype.trades = function(callback) {
   this._marketRequest('trades', null, callback);
 }
 
-BTCChina.prototype.historydata = function(since, callback) {
-  if(!callback) {
-    callback = since;
-    this._marketRequest('historydata', null, callback);
-  } else
-    this._marketRequest('historydata', {since: since}, callback);
+BTCChina.prototype.historydata = function(limit, since, sincetype, callback) {
+  var params = {};
+
+  if(limit)
+    params['limit']=limit;
+
+  if(since)
+    params['since']=since;
+
+  if(sincetype)
+    params['sincetype']=sincetype;
+
+  this._marketRequest('historydata', params, callback);
 }
 
-BTCChina.prototype.orderbook = function(callback) {
-  this._marketRequest('orderbook', null, callback);
+BTCChina.prototype.orderbook = function(market, limit, callback) {
+  var params = {};
+
+  if(market)
+    params['market']=market;
+
+  if(limit)
+    params['limit']=limit
+
+  this._marketRequest('orderbook', params, callback);
 }
 
 // internal method for accessing the Trade API
