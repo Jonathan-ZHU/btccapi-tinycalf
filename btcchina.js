@@ -20,10 +20,12 @@ BTCChina.prototype._request = function(handler, options, data, callback) {
       buffer += data;
     });
     res.on('end', function() {
-    	
+
       // check and return unauthorized messages
       if(buffer.lastIndexOf('401 Unauthorized', 0) === 0)
         return callback('General API error: '+buffer);
+      else if(buffer === 'HTTP 403 Forbidden')
+        return callback('403 Forbidden to access method');
 
       try {
         var json = JSON.parse(buffer);
@@ -103,10 +105,10 @@ BTCChina.prototype._tradeRequest = function(method, params, callback) {
     requestmethod: 'post',
     id: 1,
     method: method,
-    params: params.join('~'), // we need commas here in the querystring
+    params: params.join('~') // we need commas here in the querystring
                               // hacky workaround to perserve them
   };
-  var qs = querystring.stringify(args).replace('~', ',');
+  var qs = querystring.stringify(args).replace(/~/g, ',');
 
   var signer = crypto.createHmac('sha1', this.secret);
   var hmac = signer.update(qs).digest('hex');
@@ -141,19 +143,26 @@ BTCChina.prototype.buyOrder = function(price, amount, callback) {
    throw 'This method is deprecated. Please use buyOrder2.';
 }
 
-BTCChina.prototype.buyOrder2 = function(price, amount, callback) {
-  this._tradeRequest('buyOrder2', [price, amount], callback);
+BTCChina.prototype.buyOrder2 = function(price, amount, market, callback) {
+  if(market === null || market === undefined)
+    this._tradeRequest('buyOrder2', [price, amount], callback);
+  else
+    this._tradeRequest('buyOrder2', [price, amount], market, callback);
+
 }
 
-BTCChina.prototype.cancelOrder = function(id, callback) {
-  this._tradeRequest('cancelOrder', [id], callback);
+BTCChina.prototype.cancelOrder = function(id, market, callback) {
+  if(market === null || market === undefined)
+    this._tradeRequest('cancelOrder', [id], callback);
+  else
+    this._tradeRequest('cancelOrder', [id, market], callback);
 }
 
 BTCChina.prototype.getAccountInfo = function(type, callback) {
-    if(type === null || type === undefined)
-        this._tradeRequest('getAccountInfo', [], callback);
-    else
-        this._tradeRequest('getAccountInfo', [type], callback);
+  if(type === null || type === undefined)
+    this._tradeRequest('getAccountInfo', [], callback);
+  else
+    this._tradeRequest('getAccountInfo', [type], callback);
 }
 
 BTCChina.prototype.getDeposits = function(currency, pendingonly, callback) {
@@ -168,35 +177,72 @@ BTCChina.prototype.getMarketDepth = function() {
   throw 'This method is deprecated. Please use getMarketDepth2.';
 }
 
-BTCChina.prototype.getMarketDepth2 = function(limit, callback) {
-  if(!limit)
+BTCChina.prototype.getMarketDepth2 = function(limit, market, callback) {
+  if(limit === null || limit === undefined)
     limit = 10;
 
-  this._tradeRequest('getMarketDepth2', [limit], callback);
+  if(market === null || market === undefined)
+    market='BTCCNY';
+
+  this._tradeRequest('getMarketDepth2', [limit, market], callback);
 }
 
-BTCChina.prototype.getOrder = function(id, callback) {
-  this._tradeRequest('getOrder', [id], callback);
+BTCChina.prototype.getOrder = function(id, market, withdetail, callback) {
+  if(market === null || market === undefined)
+    market='BTCCNY';
+
+  if(withdetail === null || withdetail === undefined)
+    withdetail=false;
+
+  this._tradeRequest('getOrder', [id, market, withdetail], callback);
 }
 
-BTCChina.prototype.getOrders = function(openonly, callback) {
-  if(openonly === false)
-    this._tradeRequest('getOrders', [openonly], callback);
-  else
-    this._tradeRequest('getOrders', [], callback);
+BTCChina.prototype.getOrders = function(openonly, market, limit, offset, since, withdetail, callback) {
+  if(openonly === null || openonly === undefined)
+    openonly=true;
+
+  if(market === null || market === undefined)
+    market='BTCCNY';
+
+  if(limit === null || limit === undefined)
+    limit=1000;
+
+  if(offset === null || offset === undefined)
+    offset=0;
+
+  if(since === null || since === undefined)
+    since=0;
+
+  if(withdetail === null || withdetail === undefined)
+    withdetail=false;
+
+  this._tradeRequest('getOrders', [openonly, market, limit, offset, since, withdetail], callback);
 }
 
-BTCChina.prototype.getTransactions = function(type, limit, callback) {
-  if(!type)
+BTCChina.prototype.getTransactions = function(type, limit, offset, since, sincetype, callback) {
+  if(type === null || type === undefined)
     type = 'all';
-  if(!limit)
+
+  if(limit === null || limit === undefined)
     limit = 10;
 
-  this._tradeRequest('getTransactions', [type, limit], callback);
+  if(offset === null || offset === undefined)
+    offset = 0;
+
+  if(since === null || since === undefined)
+    since = 0;
+
+  if(sincetype === null || sincetype === undefined)
+    sincetype = 'time';
+
+  this._tradeRequest('getTransactions', [type, limit, offset, since, sincetype], callback);
 }
 
-BTCChina.prototype.getWithdrawal = function(id, callback) {
-  this._tradeRequest('getWithdrawal', [id], callback);
+BTCChina.prototype.getWithdrawal = function(id, currency, callback) {
+  if(currency === null || currency === undefined)
+    currency = 'BTC';
+
+  this._tradeRequest('getWithdrawal', [id, currency], callback);
 }
 
 BTCChina.prototype.getWithdrawals = function(currency, pendingonly, callback) {
@@ -214,8 +260,11 @@ BTCChina.prototype.sellOrder = function(currency, amount, callback) {
   throw 'This method is deprecated. Please use sellOrder2.';
 }
 
-BTCChina.prototype.sellOrder2 = function(currency, amount, callback) {
-  this._tradeRequest('sellOrder2', [currency, amount], callback);
+BTCChina.prototype.sellOrder2 = function(currency, amount, market, callback) {
+  if(market === null || market === undefined)
+    this._tradeRequest('sellOrder2', [currency, amount], callback);
+  else
+    this._tradeRequest('sellOrder2', [currency, amount], market, callback);
 }
 
 module.exports = BTCChina;
