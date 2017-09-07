@@ -2,13 +2,15 @@ var BTCChina = require('./btcchina.js');
 
 var publicBtcchina = new BTCChina();
 
-publicBtcchina.ticker(console.log);
+publicBtcchina.ticker('cnyltc',function(err,ret){
+  console.log(ret);
+});
 // publicBtcchina.trades(console.log);
 // publicBtcchina.historydata(5000, console.log);
 // publicBtcchina.orderbook(console.log);
 
-var key = 'your-api-key';
-var secret = 'your-api-secret';
+var key = 'd396f280-b4f8-4db9-8134-1e4bda0e2aba';
+var secret = '7e170110-e450-45d1-9cb0-692a9c3b2514';
 
 var privateBtcchina = new BTCChina(key, secret);
 
@@ -16,7 +18,9 @@ var privateBtcchina = new BTCChina(key, secret);
 
 // privateBtcchina.buyOrder2(9000, 1, console.log);
 // privateBtcchina.cancelOrder(1, console.log);
-// privateBtcchina.getAccountInfo(console.log);
+privateBtcchina.getAccountInfo(null,function(err,ret){
+  console.log(ret);
+});
 // privateBtcchina.getDeposits('BTC', null, console.log);
 // privateBtcchina.getMarketDepth2(null, console.log);
 // privateBtcchina.getOrder(1, console.log);

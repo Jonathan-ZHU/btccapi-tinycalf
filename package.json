@@ -1,31 +1,32 @@
 {
-  "name": "btcchina",
-  "version": "0.0.2",
-  "description": "BTCchina REST API wrapper",
+  "name": "btccapi-tinycalf",
+  "version": "0.0.1",
+  "description": "BTCchina API by tinycalf",
   "keywords": [
     "btcchina",
     "btc",
     "bitcoin",
     "exchange"
   ],
-  "author": {
-    "author": "Mike van Rossum <mike@mvr.me>"
-  },
+  "author": "Jonathan (tinycalf)",
   "license": "MIT",
   "dependencies": {
     "underscore": "1.4.4"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/askmike/btcchina"
   },
   "main": "btcchina.js",
   "engines": {
     "node": ">= 0.7"
   },
-  "bugs": {
-    "url": "https://github.com/askmike/btcchina/issues",
-    "email": "mike@mvr.me"
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "readmeFilename": "README.md"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonathan-ZHU/btccapi-tinycalf.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jonathan-ZHU/btccapi-tinycalf/issues"
+  },
+  "homepage": "https://github.com/Jonathan-ZHU/btccapi-tinycalf#readme"
 }

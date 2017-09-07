@@ -46,7 +46,7 @@ BTCChina.prototype._request = function(handler, options, data, callback) {
 }
 
 // internal method for accessing the Market API
-// 
+//
 // http://btcchina.org/api-market-data-documentation-en
 BTCChina.prototype._marketRequest = function(method, params, callback) {
   var options = {
@@ -62,9 +62,9 @@ BTCChina.prototype._marketRequest = function(method, params, callback) {
 }
 
 
-// 
+//
 // Market API calls
-// 
+//
 BTCChina.prototype.ticker = function(market, callback) {
   var params = {};
 
@@ -106,7 +106,7 @@ BTCChina.prototype.orderbook = function(market, limit, callback) {
 }
 
 // internal method for accessing the Trade API
-// 
+//
 // http://btcchina.org/api-trade-documentation-en
 BTCChina.prototype._tradeRequest = function(method, params, callback) {
   if(!this.key || !this.secret)
@@ -151,13 +151,12 @@ BTCChina.prototype._tradeRequest = function(method, params, callback) {
       'Json-Rpc-Tonce': tonce
     }
   };
-
   this._request(https, options, body, callback);
 }
 
-// 
+//
 // Trade API calls
-// 
+//
 
 BTCChina.prototype.buyOrder = function(price, amount, callback) {
    throw 'This method is deprecated. Please use buyOrder2.';
